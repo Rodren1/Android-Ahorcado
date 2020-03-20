@@ -8,11 +8,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
+import java.util.Random;
+
 public class MainActivity extends AppCompatActivity {
 
-    String palabraOculta = "CETYS";
-    int numeroDeFallos = 0;
 
+    int numeroDeFallos = 0;
+    boolean gameOver =false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +26,29 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null){
             getSupportFragmentManager().beginTransaction().add(R.id.ventanaJuego, new VentanaAhorcado()).commit();
         }
+    }
 
+    @Override
+    protected void onStart(){
+        super.onStart();
+
+        ((TextView) findViewById(R.id.palabraConGuiones)).setText(palabraGuiones());
+    }
+
+    private String eligePalabra() {
+        String[] listaPalabras = {"HOLA", "CONTRASEÑA", "ALEATORIEDAD", "CONSTANTINOPLA"};
+        Random aleatorio = new Random();
+        int posicion = aleatorio.nextInt(listaPalabras.length);
+        return listaPalabras[posicion].toUpperCase();
+    }
+    String palabraOculta = eligePalabra();
+
+    public String palabraGuiones(){
+        String auxiliar = "";
+        for (int i = 0; i < palabraOculta.length(); i++) {
+            auxiliar = auxiliar + "_ ";
+        }
+        return auxiliar;
     }
 
     public void botonPulsado (View vista){
@@ -67,12 +93,11 @@ public class MainActivity extends AppCompatActivity {
                 default : imagenAhorcado.setImageResource(R.drawable.ahorcado_fin); break;
             }
         }
+        if (numeroDeFallos > 5){
+            gameOver = true;
+            //findViewById(R.id.reinicio).setVisibility(View.VISIBLE);
+        }
 
     }
-
-
-
-
-
 
 }
